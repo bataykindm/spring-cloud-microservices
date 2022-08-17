@@ -20,3 +20,5 @@ registry/.gradle
 
 .idea
 *.log
+
+notification-service/src/main/resources/mail-props.properties
