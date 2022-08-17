@@ -19,3 +19,4 @@ registry/build
 registry/.gradle
 
 .idea
+*.log
