@@ -18,7 +18,7 @@ public class DepositController {
         this.depositService = depositService;
     }
 
-    @PostMapping("/deposit")
+    @PostMapping("/")
     public DepositResponseDTO deposit(@RequestBody DepositRequestDTO requestDTO){
         return depositService.deposit(requestDTO.getAccountId(), requestDTO.getBillId(), requestDTO.getAmount());
     }

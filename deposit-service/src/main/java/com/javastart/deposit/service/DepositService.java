@@ -62,14 +62,14 @@ public class DepositService {
     private DepositResponseDTO createResponse(BigDecimal amount, AccountResponseDTO accountResponseDTO) {
         DepositResponseDTO depositResponseDTO = new DepositResponseDTO(amount, accountResponseDTO.getEmail());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_DEPOSIT, ROUTING_KEY_DEPOSIT,
-                    objectMapper.writeValueAsString(depositResponseDTO));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new DepositServiceException("Can't send message to RabbitMQ");
-        }
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_DEPOSIT, ROUTING_KEY_DEPOSIT,
+//                    objectMapper.writeValueAsString(depositResponseDTO));
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//            throw new DepositServiceException("Can't send message to RabbitMQ");
+//        }
         return depositResponseDTO;
     }
 
