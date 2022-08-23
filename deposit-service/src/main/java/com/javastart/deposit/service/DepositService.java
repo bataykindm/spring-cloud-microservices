@@ -1,7 +1,5 @@
 package com.javastart.deposit.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javastart.deposit.controller.dto.DepositResponseDTO;
 import com.javastart.deposit.entity.Deposit;
 import com.javastart.deposit.exception.DepositServiceException;
@@ -67,8 +65,8 @@ public class DepositService {
 //            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_DEPOSIT, ROUTING_KEY_DEPOSIT,
 //                    objectMapper.writeValueAsString(depositResponseDTO));
 //        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//            throw new DepositServiceException("Can't send message to RabbitMQ");
+////            e.printStackTrace();
+////            throw new DepositServiceException("Can't send message to RabbitMQ");
 //        }
         return depositResponseDTO;
     }
