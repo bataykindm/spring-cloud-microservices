@@ -57,23 +57,33 @@ services:
       - config-service
       - registry
 
-  notification-service:
+  payment-service:
     restart: on-failure
-    container_name: notification-service
-    build: notification-service
+    container_name: payment-service
+    build: payment-service
+    ports:
+      - "8084:8084"
     depends_on:
       - config-service
       - registry
 
-  rabbitmq: # login guest:guest
-    image: rabbitmq:3-management
-    hostname: rabbitmq
-    labels:
-      NAME: "rabbitmq"
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    depends_on:
-      - config-service
-      - registry
-      - account-service
+#  notification-service:
+#    restart: on-failure
+#    container_name: notification-service
+#    build: notification-service
+#    depends_on:
+#      - config-service
+#      - registry
+#
+#  rabbitmq: # login guest:guest
+#    image: rabbitmq:3-management
+#    hostname: rabbitmq
+#    labels:
+#      NAME: "rabbitmq"
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    depends_on:
+#      - config-service
+#      - registry
+#      - account-service

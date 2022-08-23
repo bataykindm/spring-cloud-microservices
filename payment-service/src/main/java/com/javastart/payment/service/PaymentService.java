@@ -1,10 +1,11 @@
-package com.javastart.deposit.service;
+package com.javastart.payment.service;
 
-import com.javastart.deposit.controller.dto.DepositResponseDTO;
-import com.javastart.deposit.entity.Deposit;
-import com.javastart.deposit.exception.DepositServiceException;
-import com.javastart.deposit.repositiry.DepositRepository;
-import com.javastart.deposit.rest.*;
+import com.javastart.payment.controller.dto.PaymentResponseDTO;
+import com.javastart.payment.entity.Payment;
+import com.javastart.payment.exception.AmountNotEnoughException;
+import com.javastart.payment.exception.PaymentServiceException;
+import com.javastart.payment.repository.PaymentRepository;
+import com.javastart.payment.rest.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,30 +15,29 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Service
-public class DepositService {
+public class PaymentService {
 
     private static final String TOPIC_EXCHANGE_DEPOSIT = "js.deposit.notify.exchange";
     private static final String ROUTING_KEY_DEPOSIT = "js.key.deposit";
 
-    private final DepositRepository depositRepository;
+    private final PaymentRepository paymentRepository;
     private final AccountServiceClient accountServiceClient;
     private final BillServiceClient billServiceClient;
     private final RabbitTemplate rabbitTemplate;
 
 
     @Autowired
-    public DepositService(DepositRepository depositRepository, AccountServiceClient accountServiceClient,
-                          BillServiceClient billServiceClient, RabbitTemplate rabbitTemplate) {
-        this.depositRepository = depositRepository;
+    public PaymentService(PaymentRepository paymentRepository, AccountServiceClient accountServiceClient, BillServiceClient billServiceClient, RabbitTemplate rabbitTemplate) {
+        this.paymentRepository = paymentRepository;
         this.accountServiceClient = accountServiceClient;
         this.billServiceClient = billServiceClient;
         this.rabbitTemplate = rabbitTemplate;
     }
 
     @Transactional
-    public DepositResponseDTO deposit(Long accountId, Long billId, BigDecimal amount){
+    public PaymentResponseDTO pay(Long accountId, Long billId, BigDecimal amount){
         if (accountId == null && billId == null){
-            throw new DepositServiceException("Id of account and bill are null");
+            throw new PaymentServiceException("Id of account and bill are null");
         }
         if (billId != null){
             BillResponseDTO billResponseDTO = billServiceClient.getBillById(billId);
@@ -45,7 +45,7 @@ public class DepositService {
             billServiceClient.updateBill(billId, billRequestDTO);
 
             AccountResponseDTO accountResponseDTO = accountServiceClient.getAccountById(billResponseDTO.getAccountId());
-            depositRepository.save(new Deposit(amount, billId, OffsetDateTime.now(), accountResponseDTO.getEmail()));
+            paymentRepository.save(new Payment(amount, billId, OffsetDateTime.now(), accountResponseDTO.getEmail()));
 
             return createResponse(amount, accountResponseDTO);
         }
@@ -54,13 +54,13 @@ public class DepositService {
         BillRequestDTO billRequestDTO = createBillRequest(amount, defaultBill);
         billServiceClient.updateBill(defaultBill.getBillId(), billRequestDTO);
         AccountResponseDTO account = accountServiceClient.getAccountById(accountId);
-        depositRepository.save(new Deposit(amount, defaultBill.getBillId(), OffsetDateTime.now(), account.getEmail()));
+        paymentRepository.save(new Payment(amount, defaultBill.getBillId(), OffsetDateTime.now(), account.getEmail()));
 
         return createResponse(amount, account);
     }
 
-    private DepositResponseDTO createResponse(BigDecimal amount, AccountResponseDTO accountResponseDTO) {
-        DepositResponseDTO depositResponseDTO = new DepositResponseDTO(amount, accountResponseDTO.getEmail());
+    private PaymentResponseDTO createResponse(BigDecimal amount, AccountResponseDTO accountResponseDTO) {
+        PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO(amount, accountResponseDTO.getEmail());
 
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        try {
@@ -70,22 +70,25 @@ public class DepositService {
 ////            e.printStackTrace();
 ////            throw new DepositServiceException("Can't send message to RabbitMQ");
 //        }
-        return depositResponseDTO;
+        return paymentResponseDTO;
     }
 
     private BillRequestDTO createBillRequest(BigDecimal amount, BillResponseDTO billResponseDTO) {
+        if (billResponseDTO.getAmount().compareTo(amount) < 0){
+            throw new AmountNotEnoughException("Amount of bill with id: " + billResponseDTO.getBillId() + " is not enough for payment");
+        }
         BillRequestDTO billRequestDTO = new BillRequestDTO();
         billRequestDTO.setAccountId(billResponseDTO.getAccountId());
         billRequestDTO.setCreationDate(billResponseDTO.getCreationDate());
         billRequestDTO.setIsDefault(billResponseDTO.getIsDefault());
         billRequestDTO.setOverdraftEnabled(billResponseDTO.getOverdraftEnabled());
-        billRequestDTO.setAmount(billResponseDTO.getAmount().add(amount));
+        billRequestDTO.setAmount(billResponseDTO.getAmount().subtract(amount));
         return billRequestDTO;
     }
 
     private BillResponseDTO getDefaultBill(Long accountId){
         return billServiceClient.getBillsByAccountId(accountId).stream()
                 .filter(BillResponseDTO::getIsDefault).findAny()
-                .orElseThrow(()->new DepositServiceException("Unable find default bill or account with id: " + accountId));
+                .orElseThrow(()->new PaymentServiceException("Unable find default bill or account with id: " + accountId));
     }
 }

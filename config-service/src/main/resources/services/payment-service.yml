@@ -1,0 +1,29 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    properties.hibernate.temp.use_jdbc_metadata_defaults: false
+    hibernate:
+      ddl-auto: create
+    properties:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://192.168.1.201:5432/payment_service_database
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+server:
+  servlet:
+    context-path: /payments
+  port: 8084
+
+  rabbitmq:
+    port: 5672
+    host: rabbitmq
+    username: guest
+    password: guest
+    listener:
+      direct:
+        default-requeue-rejected: true
+
+
