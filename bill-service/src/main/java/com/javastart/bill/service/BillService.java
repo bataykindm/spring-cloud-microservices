@@ -25,25 +25,25 @@ public class BillService {
                 orElseThrow(() -> new BillNotFoundException("Unable to find bill with id: " + billID));
     }
 
-    public Long createBill(Long accountId, BigDecimal amount, Boolean isDefault, Boolean overdraftEnabled){
+    public Long createBill(Long accountId, BigDecimal amount, Boolean isDefault, Boolean overdraftEnabled) {
         Bill bill = new Bill(accountId, amount, isDefault, overdraftEnabled, OffsetDateTime.now());
         return billRepository.save(bill).getBillId();
     }
 
     public Bill updateBill(Long billId, Long accountId, BigDecimal amount,
-                           Boolean isDefault, Boolean overdraftEnabled, OffsetDateTime creationTime){
+                           Boolean isDefault, Boolean overdraftEnabled, OffsetDateTime creationTime) {
         Bill bill = new Bill(accountId, amount, isDefault, overdraftEnabled, creationTime);
         bill.setBillId(billId);
         return billRepository.save(bill);
     }
 
-    public Bill deleteBill(Long billId){
+    public Bill deleteBill(Long billId) {
         Bill deletedBill = getBillById(billId);
         billRepository.deleteById(billId);
         return deletedBill;
     }
 
-    public List<Bill> getBillsByAccountId(Long accountId){
+    public List<Bill> getBillsByAccountId(Long accountId) {
         return billRepository.getBillsByAccountId(accountId);
     }
 }
