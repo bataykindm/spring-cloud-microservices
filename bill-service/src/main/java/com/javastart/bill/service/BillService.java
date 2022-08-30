@@ -26,13 +26,13 @@ public class BillService {
     }
 
     public Long createBill(Long accountId, BigDecimal amount, Boolean isDefault, Boolean overdraftEnabled){
-        Bill bill = new Bill(accountId, amount, isDefault, OffsetDateTime.now(), overdraftEnabled);
+        Bill bill = new Bill(accountId, amount, isDefault, overdraftEnabled, OffsetDateTime.now());
         return billRepository.save(bill).getBillId();
     }
 
     public Bill updateBill(Long billId, Long accountId, BigDecimal amount,
-                           Boolean isDefault, Boolean overdraftEnabled){
-        Bill bill = new Bill(accountId, amount, isDefault, overdraftEnabled);
+                           Boolean isDefault, Boolean overdraftEnabled, OffsetDateTime creationTime){
+        Bill bill = new Bill(accountId, amount, isDefault, overdraftEnabled, creationTime);
         bill.setBillId(billId);
         return billRepository.save(bill);
     }

@@ -33,7 +33,7 @@ public class BillController {
     @PutMapping("/{billId}")
     public BillResponseDTO updateBill(@PathVariable Long billId, @RequestBody BillRequestDTO billRequestDTO) {
         return new BillResponseDTO(billService.updateBill(billId, billRequestDTO.getAccountId(),
-                billRequestDTO.getAmount(), billRequestDTO.getIsDefault(), billRequestDTO.getOverdraftEnabled()));
+                billRequestDTO.getAmount(), billRequestDTO.getIsDefault(), billRequestDTO.getOverdraftEnabled(), billRequestDTO.getCreationDate()));
     }
 
     @DeleteMapping("/{billId}")
