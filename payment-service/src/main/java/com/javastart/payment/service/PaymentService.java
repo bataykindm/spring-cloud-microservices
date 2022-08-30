@@ -17,8 +17,8 @@ import java.time.OffsetDateTime;
 @Service
 public class PaymentService {
 
-    private static final String TOPIC_EXCHANGE_DEPOSIT = "js.deposit.notify.exchange";
-    private static final String ROUTING_KEY_DEPOSIT = "js.key.deposit";
+    private static final String TOPIC_EXCHANGE_DEPOSIT = "js.payment.notify.exchange";
+    private static final String ROUTING_KEY_DEPOSIT = "js.key.payment";
 
     private final PaymentRepository paymentRepository;
     private final AccountServiceClient accountServiceClient;
