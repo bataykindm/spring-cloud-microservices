@@ -20,8 +20,8 @@ public class MailConfig {
     @Bean
     public JavaMailSender javaMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
+        mailSender.setHost("smtp.yandex.ru");
+        mailSender.setPort(465);
 
         mailSender.setUsername(environment.getProperty("mail.username"));
         mailSender.setPassword(environment.getProperty("mail.password"));
@@ -31,6 +31,7 @@ public class MailConfig {
         properties.put("mail.smtp.auth", environment.getProperty("mail.smtp.auth"));
         properties.put("mail.smtp.starttls.enable", environment.getProperty("mail.smtp.starttls.enable"));
         properties.put("mail.debug", environment.getProperty("mail.debug"));
+        properties.put("mail.smtp.ssl.enable", environment.getProperty("mail.smtp.ssl.enable"));
 
         return mailSender;
     }

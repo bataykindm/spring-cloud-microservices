@@ -17,8 +17,8 @@ import java.time.OffsetDateTime;
 @Service
 public class TransferService {
 
-    private static final String TOPIC_EXCHANGE_DEPOSIT = "js.transfer.notify.exchange";
-    private static final String ROUTING_KEY_DEPOSIT = "js.key.transfer";
+    private static final String TOPIC_EXCHANGE_TRANSFER = "js.transfer.notify.exchange";
+    private static final String ROUTING_KEY_TRANSFER = "js.key.transfer";
 
     private final TransferRepository transferRepository;
     private final AccountServiceClient accountServiceClient;

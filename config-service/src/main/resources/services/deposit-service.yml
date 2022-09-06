@@ -12,11 +12,6 @@ spring:
     password: root
     driver-class-name: org.postgresql.Driver
 
-server:
-  servlet:
-    context-path: /deposits
-  port: 8083
-
   rabbitmq:
     port: 5672
     host: rabbitmq
@@ -26,4 +21,7 @@ server:
       direct:
         default-requeue-rejected: true
 
-
+server:
+  servlet:
+    context-path: /deposits
+  port: 8083

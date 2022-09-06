@@ -1,10 +1,14 @@
 package com.javastart.deposit.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javastart.deposit.controller.dto.DepositResponseDTO;
 import com.javastart.deposit.entity.Deposit;
 import com.javastart.deposit.exception.DepositServiceException;
 import com.javastart.deposit.repositiry.DepositRepository;
 import com.javastart.deposit.rest.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,14 +66,14 @@ public class DepositService {
     private DepositResponseDTO createResponse(BigDecimal amount, AccountResponseDTO accountResponseDTO) {
         DepositResponseDTO depositResponseDTO = new DepositResponseDTO(amount, accountResponseDTO.getEmail());
 
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_DEPOSIT, ROUTING_KEY_DEPOSIT,
-//                    objectMapper.writeValueAsString(depositResponseDTO));
-//        } catch (JsonProcessingException e) {
-////            e.printStackTrace();
-////            throw new DepositServiceException("Can't send message to RabbitMQ");
-//        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_DEPOSIT, ROUTING_KEY_DEPOSIT,
+                    objectMapper.writeValueAsString(depositResponseDTO));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new DepositServiceException("Can't send message to RabbitMQ");
+        }
         return depositResponseDTO;
     }
 

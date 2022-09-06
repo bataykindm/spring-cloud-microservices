@@ -11,5 +11,5 @@ public class DepositResponseDTO {
 
     private BigDecimal amount;
 
-    private String mail;
+    private String email;
 }

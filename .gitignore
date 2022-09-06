@@ -18,6 +18,12 @@ gateway/.gradle
 registry/build
 registry/.gradle
 
+payment-service/build
+payment-service/.grable
+
+transfer-service/build
+transfer-service/.gradle
+
 .idea
 *.log
 

@@ -30,16 +30,13 @@ public class DepositMessageHandler {
         System.out.println(depositResponseDTO);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(depositResponseDTO.getMail());
-        mailMessage.setFrom("Dima@gmail.com");
-
+//        Need to activate line # 34 and delete #35 for real work
+//        mailMessage.setTo(depositResponseDTO.getEmail());
+        mailMessage.setTo("bataykinjava@gmail.com");
+        mailMessage.setFrom("bataykinjava@yandex.ru");
         mailMessage.setSubject("Deposit");
         mailMessage.setText("Make deposit, sum: " + depositResponseDTO.getAmount());
 
-        try {
-            javaMailSender.send(mailMessage);
-        }catch (Exception exception){
-            System.out.println(exception);
-        }
+        javaMailSender.send(mailMessage);
     }
 }
