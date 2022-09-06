@@ -1,5 +1,7 @@
 package com.javastart.transfer.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javastart.transfer.controller.dto.TransferResponseDTO;
 import com.javastart.transfer.entity.Transfer;
 import com.javastart.transfer.exception.AmountNotEnoughException;
@@ -90,14 +92,14 @@ public class TransferService {
     private TransferResponseDTO createResponse(BigDecimal amount, AccountResponseDTO senderAccountResponseDTO, AccountResponseDTO receiverAccountResponseDTO) {
         TransferResponseDTO transferResponseDTO = new TransferResponseDTO(amount, senderAccountResponseDTO.getEmail(), receiverAccountResponseDTO.getEmail());
 
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_DEPOSIT, ROUTING_KEY_DEPOSIT,
-//                    objectMapper.writeValueAsString(depositResponseDTO));
-//        } catch (JsonProcessingException e) {
-////            e.printStackTrace();
-////            throw new DepositServiceException("Can't send message to RabbitMQ");
-//        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_TRANSFER, ROUTING_KEY_TRANSFER,
+                    objectMapper.writeValueAsString(transferResponseDTO));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new TransferServiceException("Can't send message to RabbitMQ");
+        }
         return transferResponseDTO;
     }
 

@@ -1,5 +1,7 @@
 package com.javastart.payment.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javastart.payment.controller.dto.PaymentResponseDTO;
 import com.javastart.payment.entity.Payment;
 import com.javastart.payment.exception.AmountNotEnoughException;
@@ -62,14 +64,14 @@ public class PaymentService {
     private PaymentResponseDTO createResponse(BigDecimal amount, AccountResponseDTO accountResponseDTO) {
         PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO(amount, accountResponseDTO.getEmail());
 
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_DEPOSIT, ROUTING_KEY_DEPOSIT,
-//                    objectMapper.writeValueAsString(depositResponseDTO));
-//        } catch (JsonProcessingException e) {
-////            e.printStackTrace();
-////            throw new DepositServiceException("Can't send message to RabbitMQ");
-//        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_PAYMENT, ROUTING_KEY_PAYMENT,
+                    objectMapper.writeValueAsString(paymentResponseDTO));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new PaymentServiceException("Can't send message to RabbitMQ");
+        }
         return paymentResponseDTO;
     }
 

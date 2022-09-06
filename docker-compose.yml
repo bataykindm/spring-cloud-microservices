@@ -55,25 +55,25 @@ services:
       - config-service
       - registry
 
-#  payment-service:
-#    restart: on-failure
-#    container_name: payment-service
-#    build: payment-service
-#    ports:
-#      - "8084:8084"
-#    depends_on:
-#      - config-service
-#      - registry
-#
-#  transfer-service:
-#    restart: on-failure
-#    container_name: transfer-service
-#    build: transfer-service
-#    ports:
-#      - "8085:8085"
-#    depends_on:
-#      - config-service
-#      - registry
+  payment-service:
+    restart: on-failure
+    container_name: payment-service
+    build: payment-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - config-service
+      - registry
+
+  transfer-service:
+    restart: on-failure
+    container_name: transfer-service
+    build: transfer-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      - config-service
+      - registry
 
   notification-service:
     restart: on-failure

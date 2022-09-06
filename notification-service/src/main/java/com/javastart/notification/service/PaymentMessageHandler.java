@@ -11,30 +11,30 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DepositMessageHandler {
+public class PaymentMessageHandler {
 
     private final JavaMailSender javaMailSender;
 
     @Autowired
-    public DepositMessageHandler(JavaMailSender javaMailSender) {
+    public PaymentMessageHandler(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_DEPOSIT)
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_PAYMENT)
     public void receive(Message message) throws JsonProcessingException {
         System.out.println(message);
         byte[] body = message.getBody();
         String jsonBody = new String(body);
         ObjectMapper objectMapper = new ObjectMapper();
-        DepositResponseDTO depositResponseDTO = objectMapper.readValue(jsonBody, DepositResponseDTO.class);
-        System.out.println(depositResponseDTO);
+        PaymentResponseDTO paymentResponseDTO = objectMapper.readValue(jsonBody, PaymentResponseDTO.class);
+        System.out.println(paymentResponseDTO);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-//        mailMessage.setTo(depositResponseDTO.getEmail());      Need to activate for real work
+//        mailMessage.setTo(paymentResponseDTO.getEmail());      Need to activate for real work
         mailMessage.setTo("bataykinjava@gmail.com");  //         Need to delete for real work
         mailMessage.setFrom("bataykinjava@yandex.ru");
-        mailMessage.setSubject("Deposit");
-        mailMessage.setText("Deposit of " + depositResponseDTO.getAmount() + " is done");
+        mailMessage.setSubject("Payment");
+        mailMessage.setText("Payment of " + paymentResponseDTO.getAmount() + " is done");
 
         javaMailSender.send(mailMessage);
     }
