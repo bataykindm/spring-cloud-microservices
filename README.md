@@ -102,5 +102,3 @@ working on bill will be recorded in the data-base, besides of it app notificate 
 		</tr>
 	</tbody>
 </table>
-
-  <p align="right">*application is in the process of being designed</p>
