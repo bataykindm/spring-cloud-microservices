@@ -1,5 +1,5 @@
 <h1>
-  <p align="center">SpringCloud Bank Apllication</p>
+  <p align="center">SpringCloud Bank Application</p>
 </h1>
 
 
