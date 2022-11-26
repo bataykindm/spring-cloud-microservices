@@ -104,4 +104,5 @@ working on bill will be recorded in the data-base, besides of it app notificate 
 </table>
 
 <b>Stack:</b> <em>Java8, SpringBoot, SpringCloud, Hibernate, REST, Gradle, Postgre, Docker, RabbitMQ. </em>
+
 <b>Tools:</b> <em>Intellij IDEA, Postman, Docker</em>
