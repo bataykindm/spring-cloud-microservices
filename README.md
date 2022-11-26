@@ -103,6 +103,6 @@ working on bill will be recorded in the data-base, besides of it app notificate 
 	</tbody>
 </table>
 
-<b>Stack:</b> <em>Java8, SpringBoot, SpringCloud, Hibernate, REST, Gradle, Postgre, Docker, RabbitMQ. </em>
+<b>Stack:</b> <em>Java8, SpringBoot, SpringCloud, Hibernate, REST, Gradle, PostgreSQL, Docker, RabbitMQ. </em>
 
 <b>Tools:</b> <em>Intellij IDEA, Postman, Docker</em>
